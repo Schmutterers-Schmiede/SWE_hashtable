@@ -30,11 +30,12 @@ class hashtable {
 		bool empty() const;
 
 		friend std::ostream& operator<<(std::ostream& os, const hashtable<V,H,C>& ht) {
-
-
 			for (std::list<V> list : ht.data) {
-				for (V& item : list) {
-					os << item;
+				if(!list.empty()){
+					for (V& item : list) {
+						os << item << " ";
+					}
+					os << "\n";
 				}
 			}
 			return os;
@@ -53,25 +54,32 @@ class hashtable {
 
 template<	typename V, typename H, typename C>
 void hashtable<V, H, C>::insert(const V& value) {
-	int index = get_hash_index(value);
-	data.at(index).push_back(value);	
+	if(!contains(value)){
+		int index = get_hash_index(value);
+		data.at(index).push_back(value);	
 
-	count++;
-	if (load_factor() > 0.75) rehash(cap * 2);
+		count++;
+		if (load_factor() > 0.75) 
+			rehash(cap * 2);
+	}
 }
 
 template<	typename V, typename H, typename C>
 void hashtable<V, H, C>::erase(const V& value) {
-	data.at(get_hash_index(value)).remove_if([](V& element) {
+	data.at(get_hash_index(value)).remove_if([value](V& element) {
 		return C()(element, value);
 	});
 }
 
 template<	typename V, typename H, typename C>
 bool hashtable<V, H, C>::contains(const V& value) {
-	for (V item : data.at(get_hash_index(value))) {
-		if (C()(item, value)) return true;
+	int index = get_hash_index(value);
+	if(data.at(index).empty()) return false; //list empty
+
+	for (V item : data.at(index)) {		
+		if (C()(item, value)) return true; // value found
 	}
+	return false; //value not found
 }
 
 template<	typename V, typename H, typename C>
@@ -91,7 +99,7 @@ int hashtable<V, H, C>::get_hash_index(const V& value) {
 
 template<	typename V, typename H, typename C>
 void hashtable<V,H,C>::clear(){
-	for(<std::list<V>> l : data){
+	for(std::list<V> l : data){
 		l.clear();
 	}
 }
