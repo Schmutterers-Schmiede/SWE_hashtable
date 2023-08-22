@@ -66,9 +66,12 @@ void hashtable<V, H, C>::insert(const V& value) {
 
 template<	typename V, typename H, typename C>
 void hashtable<V, H, C>::erase(const V& value) {
-	data.at(get_hash_index(value)).remove_if([value](V& element) {
-		return C()(element, value);
-	});
+	if(contains(value)) {
+		count--;
+		data.at(get_hash_index(value)).remove_if([value](V& element) {
+			return C()(element, value);
+		});
+	}
 }
 
 template<	typename V, typename H, typename C>
@@ -84,12 +87,14 @@ bool hashtable<V, H, C>::contains(const V& value) {
 
 template<	typename V, typename H, typename C>
 void hashtable<V, H, C>::rehash(size_t new_n_buckets) {
+	auto old_data = data;
 	cap = new_n_buckets;
-	std::vector<std::list<V>> new_data = std::vector<std::list<V>>(cap);
-	for (auto list : data) {
-		new_data.at(get_hash_index(list.front())) = list;
-	}
-	data = new_data;
+	data = std::vector<std::list<V>>(cap);
+	for (auto list : old_data) {
+		for(const V& item : list){
+			data.at(get_hash_index(item)).push_back(item);
+		}
+	}	
 }
 
 template<	typename V, typename H, typename C>
@@ -99,9 +104,10 @@ int hashtable<V, H, C>::get_hash_index(const V& value) {
 
 template<	typename V, typename H, typename C>
 void hashtable<V,H,C>::clear(){
-	for(std::list<V> l : data){
+	for(std::list<V>& l : data){
 		l.clear();
 	}
+	count = 0;
 }
 
 //=========  PRIVATE FUNCITONS  =============
