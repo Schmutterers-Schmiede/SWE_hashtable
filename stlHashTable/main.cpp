@@ -102,12 +102,12 @@ void test_erase(shared_ptr<hashtable<V,H,C>> ht, const V& value1, const V& value
 	ht->insert(value1);
 	ht->insert(value2);
 	ht->insert(value3);
-	/*cout << "contents of hashtable before erasing: " << endl;
-	cout << *ht << endl;*/
+	cout << "contents of hashtable before erasing: " << endl;
+	cout << *ht << endl;
 	cout << "erasing first value..." << endl;
 	ht->erase(value1);
-	/*cout << "contents of hashtable after erasing: " << endl;
-	cout << *ht << endl;*/
+	cout << "contents of hashtable after erasing: " << endl;
+	cout << *ht << endl;
 
 	if(!ht->contains(value1)) 
 		cout << "SUCCESS\n" << endl;
@@ -115,6 +115,44 @@ void test_erase(shared_ptr<hashtable<V,H,C>> ht, const V& value1, const V& value
 		cout << "FAILED\n" << endl;
 
 	ht->clear();
+}
+
+template<	typename V, typename H, typename C>
+void test_erase_nonexistent_value(shared_ptr<hashtable<V, H, C>> ht, const V& value1, const V& value2, const V& value3){
+	if(value1 == value2 || value1 == value3 || value2 == value3){
+		cout << "invalid test values." << endl;
+	}
+	else{
+		cout << "====  Test case: erasing a nonexistent value (includes contains()) ====" << endl;
+		cout << "inserting: " << value1 << " and " << value2 << endl;
+		ht->insert(value1);
+		ht->insert(value2);
+
+		cout << "trying to erase " << value3 << "..." << endl;
+
+		cout << "contents of hashtable before erasing: " << endl;
+		cout << *ht << endl;
+
+		ht->erase(value3);
+
+		cout << "contents of hashtable after erasing: " << endl;
+		cout << *ht << endl;
+
+		bool test_success = true;
+
+		if(!ht->contains(value1) || !ht->contains(value2))
+			test_success = false;
+
+		ht->erase(value1);
+		ht->erase(value2);
+		if(!ht->empty())
+			test_success = false;
+
+		if(test_success)
+			cout << "SUCCESS\n" << endl;
+		else
+			cout << "FAILED\n" << endl;
+	}
 }
 
 template<	typename V, typename H, typename C>
@@ -147,6 +185,7 @@ int main() {
 	test_clear(ht, clear_test_values);
 	test_queries(ht, 10, 4);
 	test_erase(ht, 5, 6, 7);
+	test_erase_nonexistent_value(ht, 1,2,3);
 	test_rehash(ht, rehash_test_values, 10);
 
 
