@@ -174,20 +174,34 @@ void test_rehash(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_val
 	ht->clear();
 }
 
+template<	typename V, typename H, typename C>
+void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_values_size){
+	/*cout << "====  Test case: iterate over hashtable using iterator ====" << endl;
+	cout << "inserting test values..." << endl;*/
+	for(int i = 0; i < test_values_size; i++){
+		ht->insert(test_values[i]);
+	}	
+	
+	for(V& item : ht){
+		cout << item;
+	}
+	ht->clear();
+}
+
 int main() {
 	shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
 	int rehash_test_values[10] = {0,1,2,3,4,5,6,7,8,9};
-	int clear_test_values[5] = {1,2,3,4,5};
+	int test_values[5] = {1,2,3,4,5};
 	print_header("SEPARATE CHAINING");
 
-	test_insert(ht, 5);
+	/*test_insert(ht, 5);
 	test_insert_duplicates(ht, 42);
-	test_clear(ht, clear_test_values);
+	test_clear(ht, test_values);
 	test_queries(ht, 10, 4);
 	test_erase(ht, 5, 6, 7);
 	test_erase_nonexistent_value(ht, 1,2,3);
-	test_rehash(ht, rehash_test_values, 10);
-
+	test_rehash(ht, rehash_test_values, 10);*/
+	test_iterator(ht, test_values, 5);
 
 	return 0;
 }

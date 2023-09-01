@@ -1,2 +1,31 @@
 ﻿  main.cpp
-  stlHashTable.vcxproj -> C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\x64\Debug\stlHashTable.exe
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,16): error C2672: 'begin': no matching overloaded function found
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(204): message : see reference to function template instantiation 'void test_iterator<int,std::hash<int>,std::equal_to<V>>(std::shared_ptr<hashtable<V,std::hash<int>,std::equal_to<V>>>,V *,int)' being compiled
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): error C2893: Failed to specialize function template 'unknown-type std::begin(_Container &)'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xutility(1808): message : see declaration of 'std::begin'
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): message : With the following template arguments:
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): message : '_Container=std::shared_ptr<hashtable<int,std::hash<int>,std::equal_to<V>>>'
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): error C2784: 'const _Elem *std::begin(std::initializer_list<_Elem>) noexcept': could not deduce template argument for 'std::initializer_list<_Elem>' from 'std::shared_ptr<hashtable<int,std::hash<int>,std::equal_to<V>>>'
+          with
+          [
+              V=int
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\initializer_list(55): message : see declaration of 'std::begin'
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,16): error C2672: 'end': no matching overloaded function found
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): error C2893: Failed to specialize function template 'unknown-type std::end(_Container &)'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\xutility(1818): message : see declaration of 'std::end'
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): message : With the following template arguments:
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): message : '_Container=std::shared_ptr<hashtable<int,std::hash<int>,std::equal_to<V>>>'
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): error C2784: 'const _Elem *std::end(std::initializer_list<_Elem>) noexcept': could not deduce template argument for 'std::initializer_list<_Elem>' from 'std::shared_ptr<hashtable<int,std::hash<int>,std::equal_to<V>>>'
+          with
+          [
+              V=int
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\include\initializer_list(60): message : see declaration of 'std::end'
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): error C3536: '<begin>$L0': cannot be used before it is initialized
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,1): error C3536: '<end>$L0': cannot be used before it is initialized
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(185,18): error C2100: illegal indirection
