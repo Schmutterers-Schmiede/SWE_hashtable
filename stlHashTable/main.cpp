@@ -183,10 +183,10 @@ void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_v
 	}	
 	
 	auto iter = ht->begin();
-	while(iter != ht->end()){
+	while(iter != ht->end()){		
 		cout << *iter;
-		iter++;
-	}
+		iter++;		
+	}		
 	ht->clear();
 }
 
