@@ -260,7 +260,7 @@ class hashtable<V, H, C>::const_iterator : public iterator_base {
 
 			} else {
 				++value_iterator_copy;
-				return value_iterator_copy == list_iterator_copy->end();
+				return value_iterator_copy != list_iterator_copy->end();
 			}
 		}
 
@@ -339,7 +339,7 @@ class hashtable<V, H, C>::const_iterator : public iterator_base {
 					// end of list reached -> find next non-empty one or return end
 					do {
 						++list_iterator;
-					} while (list_iterator->empty());									
+					} while (list_iterator != data_ptr->end() && list_iterator->empty());
 					// Found a non-empty list, reset value_iterator
 					value_iterator = list_iterator->begin();				
 				}
