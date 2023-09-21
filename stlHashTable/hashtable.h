@@ -48,21 +48,12 @@ class hashtable {
 
 		class const_iterator;				
 
-		const_iterator begin() const{
-			auto list_iterator = data.begin();
-			while(list_iterator->empty() && list_iterator != data.end()) {list_iterator++;}	//find first nonempty list						
-			return const_iterator(data, list_iterator, list_iterator->begin());						
+		const_iterator begin() const{			
+			return const_iterator(&data, data.begin());						
 		}
 
-		const_iterator end() const{			
-			auto last_list = --data.end();	// init with last list in vector
-
-			//find last non-empty list
-			while (last_list != data.begin() && last_list->empty()) {
-				last_list--;
-			}
-			
-			return const_iterator(data, last_list, last_list->end());						
+		const_iterator end() const{						
+			return const_iterator(&data, data.end());						
 		}
 
 		using iterator_category = std::bidirectional_iterator_tag;
@@ -215,89 +206,120 @@ bool hashtable<V, H, C>::empty() const {
 template<typename V, typename H, typename C>
 class hashtable<V, H, C>::const_iterator : public iterator_base {
 
-	private:
-		const std::vector<std::list<V>>* data_ptr; // pointer to data vector of hashtable class
-		typename std::vector<std::list<V>>::const_iterator list_iterator; // Iterator of data vector for accessing lists
-		typename std::list<V>::const_iterator value_iterator; // iterator of list for accessing values
+	private:		
+		typename std::vector<std::list<V>>::const_iterator data_iterator; // Iterator of data vector for accessing lists
+		typename std::list<V>::const_iterator list_iterator; // iterator of list for accessing values
+		typename const typename std::vector<std::list<V>>* data_ptr; //pointer to container for comparisons
 
 	public:
 		
-		const_iterator(	const std::vector<std::list<V>>& data,
-										typename std::vector<std::list<V>>::const_iterator list_it,
-										typename std::list<V>::const_iterator value_it)
-										: data_ptr(&data), 
-											list_iterator(list_it), 
-											value_iterator(value_it) {
-												//std::cout << "constructor ";
+		const_iterator(	const typename std::vector<std::list<V>>* data,
+										const typename std::vector<std::list<V>>::const_iterator data_it)
+										: data_iterator(data_it), data_ptr(data){												
+												if(data_iterator == data_ptr->begin()){												
+													//begin() called -> find first non-empty list or end
+													while(data_iterator->empty() && data_iterator != data_ptr->end()){
+														data_iterator++;
+													}													
+													if(data_iterator == data_ptr->end()){
+														//container is empty -> go to end state
+														data_iterator = data_ptr->end();
+														data_iterator--;
+														list_iterator = data_iterator->end();
+														data_iterator++;
+													}
+													list_iterator = data_iterator->begin();													
+												}else {
+													// end() called -> list_iterator to end of end of last list
+													data_iterator--;
+													list_iterator = data_iterator->end();
+													data_iterator++;
+												}
+
 											}
 
-		typename std::list<V>::const_iterator get_value_iterator() const {
-			return value_iterator;
+		typename std::vector<std::list<V>>::const_iterator get_data_iterator() const {
+			return data_iterator;
 		}
 
-		typename std::vector<std::list<V>>::const_iterator get_list_iterator() const{
+		typename std::list<V>::const_iterator get_list_iterator() const{
 			return list_iterator;
-		}
-
-		const std::vector<std::list<V>>* get_data_ptr() const {
-			return data_ptr;
-		}
+		}		
 
 		bool hasNext(){
+			auto data_iterator_copy = data_iterator;
 			auto list_iterator_copy = list_iterator;
-			auto value_iterator_copy = value_iterator;
 
-			if(list_iterator_copy == data_ptr->end()){
+			if(data_iterator_copy == data_ptr->end()){
 				return false;
 			}
 
-			if(value_iterator_copy == list_iterator_copy->end()){
-				//find non empty list or end
-				while(list_iterator_copy != data_ptr->end() && list_iterator_copy->empty()){
-					list_iterator_copy++;
-				}				
-				return list_iterator_copy != data_ptr->end();
 
-			} else {
-				++value_iterator_copy;
-				return value_iterator_copy != list_iterator_copy->end();
+
+			++list_iterator_copy; // Move to the next element in the current list
+
+			if (list_iterator_copy == data_iterator_copy->end()) {
+				// Iterator is at the end of the current list, check for the next non-empty list
+				while (data_iterator_copy != data_ptr->end()) {
+					++data_iterator_copy; // Move to the next list
+					if (data_iterator_copy != data_ptr->end() && !data_iterator_copy->empty()) {
+						// Found a non-empty list, reset the list_iterator_copy
+						list_iterator_copy = data_iterator_copy->begin();
+						break;
+					}
+				}
 			}
+
+			return data_iterator_copy != data_ptr->end() && list_iterator_copy != data_iterator_copy->end();
 		}
 
 		bool operator==(const_iterator const& rhs) const{
 			//std::cout << "== ";
-			return (value_iterator == rhs.get_value_iterator());
+			return (data_iterator == rhs.get_data_iterator() && list_iterator == rhs.get_list_iterator());
 		}
 
 		bool operator!=(const_iterator const& rhs) const{
 			//std::cout << "!= ";
 
-			return this->list_iterator != rhs.get_list_iterator() || this->value_iterator != rhs.get_value_iterator();	
+			return data_iterator != rhs.get_data_iterator() || list_iterator != rhs.get_list_iterator();
 		}
 
 		const_reference operator*() const{
 			//std::cout << "* ";
-			return *value_iterator;
+			return *list_iterator;
 		}
 
 		const_pointer operator->() const{
 			//std::cout << "-> ";
-			return &(*value_iterator);
+			return &(*list_iterator);
 		}
 
 		const_iterator& operator++(){		
 			//std::cout << "&++ ";
-			if (list_iterator != data_ptr->end()) {				
-				++value_iterator;
-				
-				if(value_iterator == list_iterator->end()){					
-					list_iterator++;
-					while (list_iterator != data_ptr->end() && list_iterator->empty()) {
-						list_iterator++;
-					}
-					if (list_iterator != data_ptr->end()) {
-							value_iterator = list_iterator->begin();
-					}
+			if (data_iterator != data_ptr->end()) {
+				if (!hasNext()) {
+					//end reached -> set to end state
+					data_iterator = data_ptr->end();
+
+					//set list iterator to end of last list
+					data_iterator--;
+					list_iterator = data_iterator->end();
+
+					//go back to data_ptr->end
+					data_iterator++;
+
+					return *this;
+				}
+				//at this point there is definitely a next value
+				list_iterator++;
+
+				if (list_iterator == data_iterator->end()) {
+					// end of list reached -> find next non-empty one
+					do {
+						++data_iterator;
+					} while (data_iterator != data_ptr->end() && data_iterator->empty());
+					// Found a non-empty list, reset value_iterator
+					list_iterator = data_iterator->begin();
 				}
 			}
 			return *this;
@@ -305,21 +327,30 @@ class hashtable<V, H, C>::const_iterator : public iterator_base {
 
 		const_iterator& operator--(){
 			//std::cout << "&-- ";
-			if (list_iterator != data_ptr->begin()) {
-				value_iterator++;
-				if (list_iterator == data_ptr->end() || value_iterator == list_iterator->begin()) {
-					// Move to the previous non-empty list
-					do {
-						--list_iterator;
-					} while (list_iterator != data_ptr->begin() && (list_iterator->empty() || list_iterator == data_ptr->end()));
-					// Set value_iterator to the end if the list is empty
-					value_iterator = list_iterator->empty() ? list_iterator->end() : --list_iterator->end();
+			if(empty()){
+				//empty hashtable -> return begin
+				data_iterator = data_ptr->begin();
+				list_iterator = data_iterator.begin();
+				return *this;
+			}
+
+			if (list_iterator == data_iterator->begin()) {
+				//iterator is at start of list -> find non-empty List before or begin
+				while(data_iterator != data_ptr->begin() && data_iterator->empty()){
+					data_iterator--;
 				}
+				if(data_iterator->empty())
+					list_iterator = data_iterator->begin();
 				else {
-					// Decrement the value_iterator if not at the beginning of the list
-					--value_iterator;
+					//list is not empty -> go to last element
+					list_iterator = data_iterator->end();
+					list_iterator--;
 				}
 			}
+			else{
+				list_iterator--;
+			}
+						
 			return *this;
 		}
 
@@ -327,21 +358,30 @@ class hashtable<V, H, C>::const_iterator : public iterator_base {
 		//std::cout << "++"
 			const_iterator temp = *this; // Preserve state because of post-increment
 
-			if (list_iterator != data_ptr->end()) {
+			if (data_iterator != data_ptr->end()) {
 				if(!hasNext()){
-					value_iterator = list_iterator->end();
+					//end reached -> set to end state
+					data_iterator = data_ptr->end();
+
+					//set list iterator to end of last list
+					data_iterator--;
+					list_iterator = data_iterator->end();
+
+					//go back to data.end
+					data_iterator++;
+
 					return temp;
 				}
+				//at this point there is definitely a next value
+				list_iterator++;
 
-				value_iterator++;
-
-				if (value_iterator == list_iterator->end()) {
-					// end of list reached -> find next non-empty one or return end
+				if (list_iterator == data_iterator->end()) {
+					// end of list reached -> find next non-empty one
 					do {
-						++list_iterator;
-					} while (list_iterator != data_ptr->end() && list_iterator->empty());
+						++data_iterator;
+					} while (data_iterator != data_ptr->end() && data_iterator->empty());
 					// Found a non-empty list, reset value_iterator
-					value_iterator = list_iterator->begin();				
+					list_iterator = data_iterator->begin();				
 				}
 			}			
 			return temp;
@@ -351,14 +391,28 @@ class hashtable<V, H, C>::const_iterator : public iterator_base {
 			//std::cout << "-- ";
 			const_iterator temp = *this; //preserve state because post increment
 			//update state
-			if (value_iterator == list_iterator->begin() && list_iterator != data_ptr->begin()) {
-				do {
-					--list_iterator;
-				} while (list_iterator->empty() && list_iterator != data_ptr->end());
-				value_iterator = list_iterator->end();
+			if (empty()) {
+				//empty hashtable -> return begin
+				data_iterator = data_ptr->begin();
+				list_iterator = data_iterator.begin();
+				return temp;
+			}
+
+			if (list_iterator == data_iterator->begin()) {
+				//iterator is at start of list -> find non-empty List before or begin
+				while (data_iterator != data_ptr->begin() && data_iterator->empty()) {
+					data_iterator--;
+				}
+				if (data_iterator->empty())
+					list_iterator = data_iterator->begin();
+				else {
+					//list is not empty -> go to last element
+					list_iterator = data_iterator->end();
+					list_iterator--;
+				}
 			}
 			else {
-				value_iterator--;
+				list_iterator--;
 			}
 			return temp;
 		}
