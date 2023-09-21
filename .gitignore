@@ -1,0 +1,5 @@
+# Ignore build output in the inner stlHashTable folder (your VS project)
+/stlHashTable/bin/
+/stlHashTable/obj/
+/stlHashTable/.vs/
+/stlHashTable/packages/
