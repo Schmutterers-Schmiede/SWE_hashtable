@@ -176,17 +176,52 @@ void test_rehash(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_val
 
 template<	typename V, typename H, typename C>
 void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_values_size){
-	/*cout << "====  Test case: iterate over hashtable using iterator ====" << endl;
-	cout << "inserting test values..." << endl;*/
+	cout << "====  test case: iterate and dereferencing using iterator ====" << endl;
+	cout << "inserting test values: ";
+
+	for(int i = 0; i < test_values_size; ++i)
+		cout << test_values[i] << " ";
+	cout << endl;
+
 	for(int i = 0; i < test_values_size; i++){
 		ht->insert(test_values[i]);
 	}	
-	
-	auto iter = ht->begin();
-	while(iter != ht->end()){		
-		cout << *iter;
-		iter++;		
+
+	cout << "Operator ++ post increment:";
+	auto iter1 = ht->begin();
+	while(iter1 != ht->end()){		
+		cout << *iter1 << " ";
+		iter1++;		
 	}		
+
+	cout << endl;
+
+	cout << "Operator ++ pre increment:";
+	auto iter2 = ht->begin();
+	while (iter2 != ht->end()) {
+		cout << *iter2 << " ";
+		++iter2;
+	}
+
+	cout << endl;
+
+	cout << "Operator -- post decrement:";
+	auto iter3 = ht->end();
+	while (iter3 != ht->begin()) {
+		iter3--;
+		cout << *iter3 << " ";
+	}
+
+	cout << endl;
+
+	cout << "Operator -- pre decrement:";
+	auto iter4 = ht->end();
+	while (iter4 != ht->begin()) {
+		--iter4;
+		cout << *iter4 << " ";
+	}
+	cout << endl;
+	
 	ht->clear();
 }
 
@@ -196,13 +231,13 @@ int main() {
 	int test_values[5] = {1,2,3,4,5};
 	print_header("SEPARATE CHAINING");
 
-	/*test_insert(ht, 5);
+	test_insert(ht, 5);
 	test_insert_duplicates(ht, 42);
 	test_clear(ht, test_values);
 	test_queries(ht, 10, 4);
 	test_erase(ht, 5, 6, 7);
 	test_erase_nonexistent_value(ht, 1,2,3);
-	test_rehash(ht, rehash_test_values, 10);*/
+	test_rehash(ht, rehash_test_values, 10);
 	test_iterator(ht, test_values, 5);
 
 	return 0;
