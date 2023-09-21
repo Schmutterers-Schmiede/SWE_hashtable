@@ -133,36 +133,6 @@ void hashtable<V,H,C>::clear(){
 	count = 0;
 }
 
-//template<	typename V, typename H, typename C>
-//hashtable<V, H, C>::const_iterator hashtable<V, H, C>::begin() const {	
-//	return const_iterator(data, data.begin(), data.begin()->begin());
-//}
-
-//template<typename V, typename H, typename C>
-//hashtable<V, H, C>::const_iterator hashtable<V, H, C>::end() const {
-//	// Create and return an iterator pointing beyond the end of the data
-//	auto last_list = data.end();
-//	while(last_list->empty()){
-//		--last_list; // Adjust to the last non-empty list
-//	}
-//	return const_iterator(data, last_list, last_list->end());
-//}
-
-//=========  OPERATORS  ===========
-
-//template<typename V, typename H, typename C>
-//std::ostream& operator<<(std::ostream& os, const hashtable<V, H, C>& ht) {
-//	for (const std::list<V>& list : ht.data) {
-//		if (!list.empty()) {
-//			for (const V& item : list) {
-//				os << item << " ";
-//			}
-//			os << "\n";
-//		}
-//	}
-//	return os;
-//}
-
 template<typename V, typename H, typename C>
 bool operator==(const hashtable<V, H, C>& lhs, const hashtable<V, H, C>& rhs) {
 	if (lhs->size() == rhs->size()) {

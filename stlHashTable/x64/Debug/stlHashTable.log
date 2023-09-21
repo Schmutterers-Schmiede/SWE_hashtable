@@ -1,2 +1,36 @@
 ﻿  main.cpp
-  stlHashTable.vcxproj -> C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\x64\Debug\stlHashTable.exe
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\hashtable.h(249,1): error C2679: binary '==': no operator found which takes a right-hand operand of type 'const hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator' (or there is no acceptable conversion)
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\hashtable.h(249,1): message : could be 'built-in C++ operator==(const hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator *, const hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator *)'
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\hashtable.h(249,1): message : while trying to match the argument list '(const hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator *, const hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator)'
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\hashtable.h(248): message : while compiling class template member function 'bool hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator::operator !=(const hashtable<V,std::hash<int>,std::equal_to<V>>::const_iterator &) const'
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(192): message : see reference to function template instantiation 'bool hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator::operator !=(const hashtable<V,std::hash<int>,std::equal_to<V>>::const_iterator &) const' being compiled
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(191): message : see reference to class template instantiation 'hashtable<int,std::hash<int>,std::equal_to<V>>::const_iterator' being compiled
+          with
+          [
+              V=int
+          ]
+C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(241): message : see reference to function template instantiation 'void test_iterator<int,std::hash<int>,std::equal_to<V>>(std::shared_ptr<hashtable<V,std::hash<int>,std::equal_to<V>>>,V *,int)' being compiled
+          with
+          [
+              V=int
+          ]
