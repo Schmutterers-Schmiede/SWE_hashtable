@@ -19,7 +19,7 @@ class hashtable {
 		hashtable(size_t capacity){
 			cap = capacity;
 			count = 0;
-			data = std::vector<std::list<V>>(cap);
+			data = std::vector<std::list<V>>(cap);			
 		}
 
 		~hashtable(){}
@@ -68,8 +68,7 @@ class hashtable {
 	private:
 		std::vector<std::list<V>> data; 
 		size_t count;
-		size_t cap;
-		bool isEmpty = true;		
+		size_t cap;			
 		int get_hash_index(const V& value);
 };
 
@@ -133,19 +132,6 @@ void hashtable<V,H,C>::clear(){
 	count = 0;
 }
 
-template<typename V, typename H, typename C>
-bool operator==(const hashtable<V, H, C>& lhs, const hashtable<V, H, C>& rhs) {
-	if (lhs->size() == rhs->size()) {
-		auto it_lhs = lhs->begin();
-		auto it_rhs = rhs->begin();
-		for (; it_lhs != lhs->end(); ++it_lhs, ++it_rhs) {
-			if (*it_lhs != *it_rhs) return false;			
-		}
-		return true;
-	}
-	else return false;
-}
-
 //=========  PRIVATE FUNCITONS  =============
 
 template<typename V, typename H, typename C>
@@ -165,7 +151,7 @@ size_t hashtable<V, H, C>::capacity() const {
 
 template<typename V, typename H, typename C>
 bool hashtable<V, H, C>::empty() const {
-	return isEmpty;
+	return count == 0;
 }
 
 
@@ -370,6 +356,22 @@ class hashtable<V, H, C>::const_iterator : public iterator_base {
 		}
 	
 };
+
+template<typename V, typename H, typename C>
+bool operator==(const hashtable<V,H,C> lhs, const hashtable<V, H, C> rhs){
+	if(lhs.size() != rhs.size()) return false;
+
+	auto iter_lhs = lhs.begin();
+	auto iter_rhs = rhs.begin();
+
+	while(iter_lhs != lhs.end()){
+		if(!(C()(*iter_lhs, *iter_rhs))) return false;
+		iter_lhs++;
+		iter_rhs++;
+	}
+
+	return true;
+}
 
 
 

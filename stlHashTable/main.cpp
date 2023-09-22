@@ -30,17 +30,17 @@ void test_queries(shared_ptr<hashtable<V, H, C>> ht, int expected_capacity, cons
 	cout << "empty: " << ht->empty() << endl;
 	cout << "expected true\n" << endl;
 	cout << "load factor: " << ht->load_factor() << endl;
-	cout << "expected 0.1\n" << endl;
+	cout << "expected 0\n" << endl;
 	
 	cout << "\n" << "inserting " << test_value << "..." << endl;
 	ht->insert(test_value);
 	
-	cout << "size: " << ht->size();
+	cout << "size: " << ht->size() << endl;
 	cout << "expected 1\n" << endl;	
-	cout << "empty: " << ht->empty();
+	cout << "empty: " << ht->empty() << endl;
 	cout << "expected false\n" << endl;
 
-	if(	ht->empty() &&
+	if(	!ht->empty() &&
 		ht->size() == 1 &&
 		ht->capacity() == expected_capacity &&
 		ht->load_factor() >= 0.09)
@@ -71,12 +71,12 @@ void test_insert_duplicates(shared_ptr<hashtable<V, H, C>> ht, const V& value){
 		ht->insert(value);
 	}
 	cout << "contets of hashtable:" << endl;
-	cout << *ht;
+	cout << *ht << endl;
 	ht->erase(5);
 	if(!ht->contains(5)) 
-		cout << "SUCCESS" << endl;
+		cout << "SUCCESS\n" << endl;
 	else 
-		cout << "FAILED" << endl;
+		cout << "FAILED\n" << endl;
 	ht->clear();
 }
 
@@ -89,7 +89,7 @@ void test_clear(shared_ptr<hashtable<V, H, C>> ht, const V* test_values){
 	}	
 	cout << "contents of hashtable: " << endl;
 	cout << *ht << endl;
-	cout << "clearing..." << endl;
+	cout << "clearing...\n" << endl;
 	ht->clear();
 	if(ht->empty()) cout << "SUCCESS\n" << endl;
 	else cout << "FAILED\n";
@@ -166,7 +166,7 @@ void test_rehash(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_val
 	}
 
 	cout << "capacity after rehash: " << ht->capacity() << endl;
-	cout << "size: " << ht->size() << endl;
+	cout << "size: " << ht->size() << endl << endl;
 	if(ht->capacity() == 20) 
 		cout << "SUCCESS\n" << endl;
 	else 
@@ -225,20 +225,84 @@ void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_v
 	ht->clear();
 }
 
+template<typename V, typename H, typename C>
+void test_equal_operator(shared_ptr<hashtable<V,H,C>> ht1, shared_ptr<hashtable<V, H, C>> ht2, V* test_values, int test_values_size){
+	cout << "====  test case: comparing two hashtables using the == operator ====" << endl;
+	cout << "inserting values [";
+	for(int i = 0; i < test_values_size; i++){
+		cout << test_values[i];
+		if(i < 4) cout <<", ";
+	}
+	cout << "] into both hashtables..." << endl;
+
+	for (int i = 0; i < test_values_size; i++) {
+		ht1->insert(test_values[i]);
+		ht2->insert(test_values[i]);
+	}
+
+	cout << "comparing...\n" << endl;
+
+	if(*ht1 == *ht2) 
+		cout << "SUCCESS\n" << endl;
+	else cout << "FAILED\n" << endl;
+
+
+	ht1->clear();
+	ht2->clear();
+}
+
 int main() {
 	shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+	shared_ptr<hashtable<int>> ht2 = make_shared<hashtable<int>>(10);
 	int rehash_test_values[10] = {0,1,2,3,4,5,6,7,8,9};
 	int test_values[5] = {1,2,3,4,5};
+
+	string test_values_string[5] = {"a", "b", "c", "d", "e"};
+	shared_ptr<hashtable<string>> ht_string = make_shared<hashtable<string>>(10);
 	print_header("SEPARATE CHAINING");
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		test_queries(ht, 10, 5);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		test_insert(ht, 5);
+	}
 
-	test_insert(ht, 5);
-	test_insert_duplicates(ht, 42);
-	test_clear(ht, test_values);
-	test_queries(ht, 10, 4);
-	test_erase(ht, 5, 6, 7);
-	test_erase_nonexistent_value(ht, 1,2,3);
-	test_rehash(ht, rehash_test_values, 10);
-	test_iterator(ht, test_values, 5);
-
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		test_insert_duplicates(ht, 42);
+	}
+	{
+		int test_values[5] = { 1,2,3,4,5 };
+		test_clear(ht, test_values);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		test_queries(ht, 10, 4);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		test_erase(ht, 5, 6, 7);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		test_erase_nonexistent_value(ht, 1,2,3);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		int rehash_test_values[10] = { 0,1,2,3,4,5,6,7,8,9 };
+		test_rehash(ht, rehash_test_values, 10);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		int test_values[5] = { 1,2,3,4,5 };
+		test_iterator(ht, test_values, 5);
+	}
+	{
+		shared_ptr<hashtable<int>> ht = make_shared<hashtable<int>>(10);
+		int test_values[5] = { 1,2,3,4,5 };
+		test_equal_operator(ht, ht2, test_values, 5);
+	}
 	return 0;
 }
