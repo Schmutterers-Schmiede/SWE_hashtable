@@ -5,6 +5,14 @@
 #include <iomanip>
 using namespace std;
 
+//custom functor for testing collision handling
+template<typename T>
+struct customHash {
+	std::size_t operator()(const T& value) const {
+		return 5;
+	}
+};
+
 void print_header(string text){
 	cout << "+";
 	for(int i = 0; i < text.size() + 10; i++)
@@ -19,10 +27,10 @@ void print_header(string text){
 	cout << "+" << endl << endl;
 }
 
-
 template<	typename V, typename H, typename C>
 void test_queries(shared_ptr<hashtable<V, H, C>> ht, int expected_capacity, const V& test_value){
-	cout << "====  Test case: queries  ====" << endl;
+	cout << "====  Test case: queries  ====\n" << endl;
+	cout << "create a hashtable and test all queries \nbefore and after inserting a value." << endl;
 	cout << "size: " << ht->size() << endl;
 	cout << "expected 0 \n" << endl;
 	cout << "capacity: " << ht->capacity() << endl;
@@ -53,7 +61,7 @@ void test_queries(shared_ptr<hashtable<V, H, C>> ht, int expected_capacity, cons
 
 template<	typename V, typename H, typename C>
 void test_insert(shared_ptr<hashtable<V,H,C>> ht, const V& value) {
-	cout << "====  Test case: insert a vlaue (includes contains())  ====" << endl;
+	cout << "====  Test case: insert a vlaue (includes contains())  ====\n" << endl;	
 	cout << "inserting: " << value << endl;
 	ht->insert(value);
 	cout << "contents of hashtable: " << endl;
@@ -65,7 +73,8 @@ void test_insert(shared_ptr<hashtable<V,H,C>> ht, const V& value) {
 
 template<	typename V, typename H, typename C>
 void test_insert_duplicates(shared_ptr<hashtable<V, H, C>> ht, const V& value){
-	cout << "==== Test case: insert duplicate values ====" << endl;
+	cout << "==== Test case: insert duplicate values ====\n" << endl;
+	cout << "hashtable should not accept duplicate \nvalues and not add anything." << endl;
 	cout << "inserting " << value << " 5 times..." << endl;
 	for(int i = 0; i < 5; i++){
 		ht->insert(value);
@@ -82,7 +91,7 @@ void test_insert_duplicates(shared_ptr<hashtable<V, H, C>> ht, const V& value){
 
 template<	typename V, typename H, typename C>
 void test_clear(shared_ptr<hashtable<V, H, C>> ht, const V* test_values){
-	cout << "====  Test case: clear the hashtable (includes empty())  ====" << endl;
+	cout << "====  Test case: clear the hashtable (includes empty())  ====\n" << endl;
 	cout << "inserting values..." << endl;
 	for(int i = 0; i < 5; i++){
 		ht->insert(test_values[i]);
@@ -97,7 +106,7 @@ void test_clear(shared_ptr<hashtable<V, H, C>> ht, const V* test_values){
 
 template<	typename V, typename H, typename C>
 void test_erase(shared_ptr<hashtable<V,H,C>> ht, const V& value1, const V& value2, const V& value3){
-	cout << "====  Test case: erasing a value (includes contains()) ====" << endl;
+	cout << "====  Test case: erasing a value (includes contains()) ====\n" << endl;
 	cout << "inserting: " << value1 << ", " << value2 << ", " << value3 << endl;
 	ht->insert(value1);
 	ht->insert(value2);
@@ -123,7 +132,8 @@ void test_erase_nonexistent_value(shared_ptr<hashtable<V, H, C>> ht, const V& va
 		cout << "invalid test values." << endl;
 	}
 	else{
-		cout << "====  Test case: erasing a nonexistent value (includes contains()) ====" << endl;
+		cout << "====  Test case: erasing a nonexistent value (includes contains()) ====\n" << endl;
+		cout << "when the value is not found the hashtable should do nothing." << endl;
 		cout << "inserting: " << value1 << " and " << value2 << endl;
 		ht->insert(value1);
 		ht->insert(value2);
@@ -157,7 +167,7 @@ void test_erase_nonexistent_value(shared_ptr<hashtable<V, H, C>> ht, const V& va
 
 template<	typename V, typename H, typename C>
 void test_rehash(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_values_size)	{	
-	cout << "====  Test case: overload triggering rehash ====" << endl;
+	cout << "====  Test case: overload triggering rehash ====\n" << endl;
 	cout << "capacity before rehash: " << ht->capacity() << endl;
 	cout << "inserting values..." << endl;
 
@@ -176,7 +186,7 @@ void test_rehash(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_val
 
 template<	typename V, typename H, typename C>
 void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_values_size){
-	cout << "====  test case: iterate and dereferencing using iterator ====" << endl;
+	cout << "====  test case: iterating and dereferencing using iterator ====\n" << endl;
 	cout << "inserting test values: ";
 
 	for(int i = 0; i < test_values_size; ++i)
@@ -187,7 +197,7 @@ void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_v
 		ht->insert(test_values[i]);
 	}	
 
-	cout << "Operator ++ post increment:";
+	cout << "Operator ++ post increment: ";
 	auto iter1 = ht->begin();
 	while(iter1 != ht->end()){		
 		cout << *iter1 << " ";
@@ -196,7 +206,7 @@ void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_v
 
 	cout << endl;
 
-	cout << "Operator ++ pre increment:";
+	cout << "Operator ++ pre increment: ";
 	auto iter2 = ht->begin();
 	while (iter2 != ht->end()) {
 		cout << *iter2 << " ";
@@ -205,7 +215,7 @@ void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_v
 
 	cout << endl;
 
-	cout << "Operator -- post decrement:";
+	cout << "Operator -- post decrement: ";
 	auto iter3 = ht->end();
 	while (iter3 != ht->begin()) {
 		iter3--;
@@ -214,20 +224,20 @@ void test_iterator(shared_ptr<hashtable<V, H, C>> ht, V* test_values, int test_v
 
 	cout << endl;
 
-	cout << "Operator -- pre decrement:";
+	cout << "Operator -- pre decrement: ";
 	auto iter4 = ht->end();
 	while (iter4 != ht->begin()) {
 		--iter4;
 		cout << *iter4 << " ";
 	}
-	cout << endl;
+	cout << endl << endl;
 	
 	ht->clear();
 }
 
 template<typename V, typename H, typename C>
 void test_equal_operator(shared_ptr<hashtable<V,H,C>> ht1, shared_ptr<hashtable<V, H, C>> ht2, V* test_values, int test_values_size){
-	cout << "====  test case: comparing two hashtables using the == operator ====" << endl;
+	cout << "====  test case: comparing two hashtables using the == operator ====\n" << endl;
 	cout << "inserting values [";
 	for(int i = 0; i < test_values_size; i++){
 		cout << test_values[i];
@@ -249,6 +259,26 @@ void test_equal_operator(shared_ptr<hashtable<V,H,C>> ht1, shared_ptr<hashtable<
 
 	ht1->clear();
 	ht2->clear();
+}
+
+void test_custom_functor(){
+	cout << "====  test case: adding values with the same hash code ====\n" << endl;
+	cout << "hash functor always returns the same \nvalue to cause collision.\n" << endl;
+	shared_ptr<hashtable<int, customHash<int>>> ht = make_shared<hashtable<int, customHash<int>>>(10);
+	cout << "inserting 5 and 6...\n" << endl;
+	ht->insert(5);
+	ht->insert(6);
+	if(ht->size() == 2){
+		cout << "SUCCESS\n" << endl;
+	} else {
+		cout << "FAILED\n" << endl;
+	}
+}
+
+void test_collision_chaining(){
+	cout << "====  test case: using a hashtable with a custom hash functor ====\n" << endl;
+	cout << "" << endl;
+	shared_ptr<hashtable<int, customHash<int>>> ht = make_shared<hashtable<int, customHash<int>>>(10);
 }
 
 int main() {
@@ -304,5 +334,7 @@ int main() {
 		int test_values[5] = { 1,2,3,4,5 };
 		test_equal_operator(ht, ht2, test_values, 5);
 	}
+
+	test_custom_functor();
 	return 0;
 }
