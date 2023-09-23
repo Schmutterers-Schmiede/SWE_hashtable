@@ -1,3 +1,2 @@
 ﻿  main.cpp
-C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\main.cpp(293,20): warning C4806: '==': unsafe operation: no value of type 'bool' promoted to type 'int' can equal the given constant
   stlHashTable.vcxproj -> C:\FH\Bachellor\sem4\swe\ersatzaufgabe\stlHashTable\stlHashTable\x64\Debug\stlHashTable_separate_chaining.exe

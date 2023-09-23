@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="hashtable.h" />
     <ClInclude Include="hashtable_oa.h" />
     <ClInclude Include="hashtable_sc.h" />
   </ItemGroup>

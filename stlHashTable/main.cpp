@@ -290,7 +290,7 @@ void test_collision_handling_sc(){
 	cout << "inserting a value..." << endl;
 	ht->insert(5);
 	ht->insert(6);
-	if(!ht->size() == 2){
+	if(!(ht->size() == 2)){
 		cout << "SUCCESS\n" << endl;
 	} else{
 		cout << "FAILED\n" << endl;
@@ -318,6 +318,7 @@ void test_custom_comp_functor_sc(){
 
 
 }
+
 
 // OPEN ADDRESSING UNIT TESTS ============================================================================
 
@@ -628,6 +629,8 @@ void test_skip_deleted_value_oa(){
 }
 
 
+
+
 int main() {		
 
 	print_header("SEPARATE CHAINING");
@@ -731,5 +734,8 @@ int main() {
 	test_custom_hash_functor_oa();
 	test_custom_comp_functor_oa();
 	test_skip_deleted_value_oa();
+
+	shared_ptr<hashtable_sc<int>> ht = make_shared<hashtable_sc<int>>(10);
+	
 	return 0;
 }

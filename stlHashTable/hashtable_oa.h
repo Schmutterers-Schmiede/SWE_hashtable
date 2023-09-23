@@ -11,7 +11,7 @@
 template<	typename V,
 	typename H = std::hash<V>,
 	typename C = std::equal_to<V>>
-	class hashtable_oa {//sc-> separate chaining
+	class hashtable_oa : hashtable<V,H,C>{//sc-> separate chaining
 	
 	public:
 
@@ -25,16 +25,16 @@ template<	typename V,
 		}
 
 		~hashtable_oa() {}
-		void insert(const V& value);
-		void erase(const V& value);
-		bool contains(const V& value);
-		void rehash(size_t new_n_buckets);
-		void clear();
+		void insert(const V& value)override;
+		void erase(const V& value)override;
+		bool contains(const V& value)override;
+		void rehash(size_t new_n_buckets)override;
+		void clear()override;
 
-		double load_factor() const;
-		size_t size() const;
-		size_t capacity() const;
-		bool empty() const;
+		double load_factor() const override;
+		size_t size() const override;
+		size_t capacity() const override;
+		bool empty() const override;
 
 		friend std::ostream& operator<<(std::ostream& os, const hashtable_oa<V, H, C>& ht) {						
 			for (const Entry item : ht.data) {

@@ -5,13 +5,14 @@
 #include <list>
 #include <ostream>
 #include <vector>
+#include "hashtable.h"
 
 
 
 template<	typename V, 
 					typename H = std::hash<V>, 
 					typename C = std::equal_to<V>>
-class hashtable_sc {//sc-> separate chaining
+class hashtable_sc : hashtable<V,H,C>{//sc-> separate chaining
 	public: 	
 
 		hashtable_sc(size_t capacity){
@@ -21,16 +22,16 @@ class hashtable_sc {//sc-> separate chaining
 		}
 
 		~hashtable_sc(){}
-		void insert(const V& value); 
-		void erase(const V& value); 
-		bool contains(const V& value); 
-		void rehash(size_t new_n_buckets);
+		void insert(const V& value)override; 
+		void erase(const V& value)override;
+		bool contains(const V& value)override;
+		void rehash(size_t new_n_buckets)override;
 		void clear();
 	
-		double load_factor() const; 
-		size_t size() const; 
-		size_t capacity() const; 
-		bool empty() const;
+		double load_factor() const override;
+		size_t size() const override;
+		size_t capacity() const override;
+		bool empty() const override;
 
 		friend std::ostream& operator<<(std::ostream& os, const hashtable_sc<V,H,C>& ht){
 			for (const std::list<V>& list : ht.data) {
@@ -73,7 +74,7 @@ class hashtable_sc {//sc-> separate chaining
 //=========  PUBLIC FUNCITONS  =============
 
 template<	typename V, typename H, typename C>
-void hashtable_sc<V, H, C>::insert(const V& value) {
+void hashtable_sc<V, H, C>::insert(const V& value){
 	if(!contains(value)){
 		int index = get_hash_index(value);
 		data.at(index).push_back(value);	
