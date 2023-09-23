@@ -1,11 +1,3 @@
 # Ignore build output in the inner stlHashTable folder (your VS project)
-/stlHashTable/bin/
-/stlHashTable/obj/
-/stlHashTable/.vs/
-/stlHashTable/packages/
-
-# Ignore build output in the outer stlHashTable folder (where .git is located)
-/bin/
-/obj/
-/.vs/
-/packages/
+/stlHashTable/x64/
+/stl_hashtable_open_addressing/
