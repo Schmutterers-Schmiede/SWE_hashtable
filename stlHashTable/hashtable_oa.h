@@ -172,12 +172,14 @@ bool hashtable_oa<V, H, C>::empty() const {
 
 template<typename V, typename H, typename C>
 size_t hashtable_oa<V, H, C>::indexOf(const V& value) const {
-	size_t index = 0;
-	while (index < cap){
+	size_t index = get_hash_index(value);
+	while (data.at(index).state > 0){
 		if(data.at(index).state == 2 && C()(data.at(index).value, value)){
 			return index;
 		}
 		index++;		
+		if(index == cap)
+			index = 0;
 	}
 	return -1;
 }
