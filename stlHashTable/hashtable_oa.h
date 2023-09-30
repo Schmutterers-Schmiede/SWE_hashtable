@@ -93,6 +93,11 @@ void hashtable_oa<V, H, C>::insert(const V& value) {
 		//find empty slot
 		while(data.at(index).state == 2){
 			index++;
+			//reset if end is reached. Because rehash is triggered 
+			//when the load factor is too high, there will always be a free slot, 
+			//so there cannot be an endless loop
+			if(index == cap)
+				index = 0;
 		}
 		data.at(index).value = value;
 		data.at(index).state = 2;
@@ -167,12 +172,12 @@ bool hashtable_oa<V, H, C>::empty() const {
 
 template<typename V, typename H, typename C>
 size_t hashtable_oa<V, H, C>::indexOf(const V& value) const {
-	size_t index = get_hash_index(value);
-	while (data.at(index).state > 0 && index < cap){
-		if(C()(data.at(index).value, value) && data.at(index).state == 2){
+	size_t index = 0;
+	while (index < cap){
+		if(data.at(index).state == 2 && C()(data.at(index).value, value)){
 			return index;
 		}
-		index++;
+		index++;		
 	}
 	return -1;
 }
